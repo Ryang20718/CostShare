@@ -222,6 +222,16 @@ app.get('/auth/pinterest/callback', passport.authorize('pinterest', { failureRed
 });
 
 /**
+ * Dynamo Database routes
+ */
+
+var costDB = require('./controllers/database.js');
+//costDB.createTable();
+//costDB.insert();
+//costDB.scan();
+//costDB.read("testmail");
+//costDB.delete("testmail");
+/**
  * Error Handler.
  */
 if (process.env.NODE_ENV === 'development') {
