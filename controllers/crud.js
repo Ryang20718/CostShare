@@ -1,0 +1,4 @@
+exports.createPost = function(){
+
+};
+

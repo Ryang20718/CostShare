@@ -37,14 +37,15 @@ dynamodb.createTable(params, function(err, data) {
 
 
 
-////INSERT///
-exports.insert = function(email_key, arrayItems, totalCost){//insert or update function
+////INSERT Buyer///
+exports.insertBuyer = function(email_key, arrayItems, totalCost){//insert or update function
 
 var docClient = new AWS.DynamoDB.DocumentClient();//way to insert
 var params = {
   TableName: tableName,
   Item:{
     "email": email_key,//email
+    "role": "buyer",
     "cost": totalCost,//integer
     "items":arrayItems//array
   }
@@ -59,6 +60,91 @@ docClient.put(params, function(err, data) {
     }
 });
 };
+
+
+
+
+
+
+
+////INSERT RoadTripper/// the one making the big grocery haul
+exports.insertTripper = function(email_key, buyer_array){//insert or update function
+
+var docClient = new AWS.DynamoDB.DocumentClient();//way to insert
+var params = {
+  TableName: tableName,
+  Item:{
+    "email": email_key,//email
+    "role": "tripper",
+    "buyers": buyer_array,//array
+  }
+};
+
+// Call DynamoDB to add the item to the table
+docClient.put(params, function(err, data) {
+    if (err) {
+        console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
+    } else {
+        console.log("Added item:", JSON.stringify(data, null, 2));
+    }
+});
+};
+
+
+
+
+//Delete a buyer from a tripper's list
+
+exports.deleteTripper = function(email_key, buyer){
+var docClient = new AWS.DynamoDB.DocumentClient();
+//first get the item
+var params = {
+    TableName: tableName,
+    Key:{
+        "email": email_key,
+    }
+};
+
+docClient.get(params, function(err, data) {
+    if (err) {
+        console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
+    } else {
+        //remove buyer from array
+    var array = data.Item.buyers;
+    var index = array.indexOf(buyer);
+        if (index > -1) {
+        array.splice(index, 1);
+        }  
+    var params = {
+    TableName: tableName,
+    Item:{
+        "email": email_key,//email
+        "role": "tripper",
+        "buyers": array,//array
+        }
+    };
+
+        // Call DynamoDB to add the item to the table
+        docClient.put(params, function(err, data) {
+    if (err) {
+        console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
+    } else {
+        console.log("Added item:", JSON.stringify(data, null, 2));
+    }
+});
+}
+    
+});
+};
+
+
+
+
+
+
+
+
+
 
 
 
@@ -83,9 +169,9 @@ docClient.get(params, function(err, data) {
     }
 });
 };
-//DELETE AN ITEM
+//DELETEs Buyer
 
-exports.delete = function(email_key){
+exports.deleteBuyer = function(email_key){
 var docClient = new AWS.DynamoDB.DocumentClient();
     
 var params = {
@@ -104,6 +190,12 @@ docClient.delete(params, function(err, data) {
     }
 });
 };
+
+
+
+
+
+
 ///SCAN ALL ITEMS
 exports.scan = function(){
 var docClient = new AWS.DynamoDB.DocumentClient();
@@ -121,11 +213,7 @@ function onScan(err, data) {
     } else {
         // print all the movies
         console.log("Scan succeeded.");
-        data.Items.forEach(function(person) {
-           console.log(
-                person.email + ": total Cost : ",
-                person.cost, ". total Items: ", person.items);
-        });
+        console.log(data.Items);
 
         // continue scanning if we have more movies, because
         // scan can retrieve a maximum of 1MB of data
@@ -137,3 +225,7 @@ function onScan(err, data) {
     }
 }
 };
+
+
+
+

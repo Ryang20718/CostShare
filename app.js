@@ -35,6 +35,7 @@ const userController = require('./controllers/user');
 const apiController = require('./controllers/api');
 const contactController = require('./controllers/contact');
 
+
 /**
  * API keys and Passport configuration.
  */
@@ -227,10 +228,54 @@ app.get('/auth/pinterest/callback', passport.authorize('pinterest', { failureRed
 
 var costDB = require('./controllers/database.js');
 //costDB.createTable();
-//costDB.insert();
+//costDB.insertBuyer("test",["carrot","potato"],10);
+//costDB.insertTripper("seller",["kevin","ryan","sean"]);
+//costDB.deleteTripper("seller","kevin");
 //costDB.scan();
 //costDB.read("testmail");
 //costDB.delete("testmail");
+
+
+/**
+ * CRUD routes
+ */
+const crudController = require('./controllers/crud');
+var crud = require('./controllers/crud.js');
+app.get('/createPost',function(req,res){
+  res.sendFile(path.join(__dirname+'/views/create.html'));
+});
+
+
+app.get('/allUsers',function(req,res){
+var AWS = require("aws-sdk");
+var dynamo = require('dynamodb');
+var tableName = "CostShare";
+dynamo.AWS.config.update({accessKeyId: process.env.aws_access_key_id, secretAccessKey: process.env.aws_secret_access_key, region: "us-west-1"});
+var docClient = new AWS.DynamoDB.DocumentClient();
+var params = {
+    TableName: tableName
+};
+docClient.scan(params, onScan);
+function onScan(err, data) {
+    if (err) {
+        console.error("Unable to scan the table. Error JSON:", JSON.stringify(err, null, 2));
+    } else {
+        // print all the movies
+        console.log("Scan succeeded.");
+        res.send(data.Items);
+
+        // continue scanning if we have more movies, because
+        // scan can retrieve a maximum of 1MB of data
+        if (typeof data.LastEvaluatedKey != "undefined") {
+            console.log("Scanning for more...");
+            params.ExclusiveStartKey = data.LastEvaluatedKey;
+            docClient.scan(params, onScan);
+        }
+    }
+}
+});
+
+
 /**
  * Error Handler.
  */
