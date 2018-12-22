@@ -1,6 +1,7 @@
 /**
  * Module dependencies.
  */
+var cors = require('cors');
 const express = require('express');
 const compression = require('compression');
 const session = require('express-session');
@@ -59,6 +60,7 @@ mongoose.connection.on('error', (err) => {
 /**
  * Express configuration.
  */
+app.use(cors())
 app.set('host', process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0');
 app.set('port', process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
@@ -277,7 +279,7 @@ function onScan(err, data) {
 
 
 
-app.get("/url", (req, res, next) => {
+app.get("/url", cors(),(req, res, next) => {
  res.json(["Tony","Lisa","Michael","Ginger","Food"]);
 });
 
