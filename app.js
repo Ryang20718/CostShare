@@ -276,6 +276,11 @@ function onScan(err, data) {
 });
 
 
+
+app.get("/url", (req, res, next) => {
+ res.json(["Tony","Lisa","Michael","Ginger","Food"]);
+});
+
 /**
  * Error Handler.
  */
