@@ -231,6 +231,7 @@ app.get('/auth/pinterest/callback', passport.authorize('pinterest', { failureRed
 var costDB = require('./controllers/database.js');
 //costDB.createTable();
 //costDB.insertBuyer("test",["carrot","potato"],10);
+//costDB.insertBuyer("test",["carrot","potato"],10);// email, items, total cost
 //costDB.insertTripper("seller",["kevin","ryan","sean"]);
 //costDB.deleteTripper("seller","kevin");
 //costDB.scan();
@@ -264,7 +265,8 @@ function onScan(err, data) {
     } else {
         // print all the movies
         console.log("Scan succeeded.");
-        res.send(data.Items);
+        //res.send(data.Items);
+        res.json(data.Items);
 
         // continue scanning if we have more movies, because
         // scan can retrieve a maximum of 1MB of data
@@ -278,7 +280,7 @@ function onScan(err, data) {
 });
 
 
-
+// example endpoint
 app.get("/url", cors(),(req, res, next) => {
  res.json(["Tony","Lisa","Michael","Ginger","Food"]);
 });
