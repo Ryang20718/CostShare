@@ -2,8 +2,13 @@ var AWS = require("aws-sdk");
 var dynamo = require('dynamodb');
 var tableName = "CostShare";
 
-dynamo.AWS.config.update({accessKeyId: process.env.aws_access_key_id, secretAccessKey: process.env.aws_secret_access_key, region: "us-west-1"});
+const multer = require('multer');
+const multerS3 = require('multer-s3');
 
+dynamo.AWS.config.update({accessKeyId: process.env.aws_access_key_id, secretAccessKey: process.env.aws_secret_access_key, region: "us-west-1"});
+AWS.config.update({accessKeyId: process.env.aws_access_key_id, secretAccessKey: process.env.aws_secret_access_key, region: "us-west-1"});
+
+const s3 = new aws.S3();
 var dynamodb = new AWS.DynamoDB();
 
 
@@ -227,5 +232,53 @@ function onScan(err, data) {
 };
 
 
+
+
+
+
+
+///////FOR PENGYOU APP
+
+exports.insertMale = function(email_key, age, citizen, house, car, yearIncome, picArray){//insert or update function
+
+var docClient = new AWS.DynamoDB.DocumentClient();//way to insert
+var params = {
+  TableName: tableName,
+  Item:{
+    "email": email_key,//email
+    "role": "buyer",
+    "cost": totalCost,//integer
+    "items":arrayItems//array
+  }
+};
+
+// Call DynamoDB to add the item to the table
+docClient.put(params, function(err, data) {
+    if (err) {
+        console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
+    } else {
+        console.log("Added item:", JSON.stringify(data, null, 2));
+    }
+});
+};
+
+
+
+///Amazon S3 Bucket
+const upload = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: 'medium-test',
+    acl: 'public-read',
+    metadata: function (req, file, cb) {
+      cb(null, {fieldName: file.fieldname});
+    },
+    key: function (req, file, cb) {
+      cb(null, Date.now().toString())
+    }
+  })
+})
+
+module.exports = upload;
 
 
