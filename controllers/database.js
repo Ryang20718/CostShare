@@ -8,7 +8,7 @@ const multerS3 = require('multer-s3');
 dynamo.AWS.config.update({accessKeyId: process.env.aws_access_key_id, secretAccessKey: process.env.aws_secret_access_key, region: "us-west-1"});
 AWS.config.update({accessKeyId: process.env.aws_access_key_id, secretAccessKey: process.env.aws_secret_access_key, region: "us-west-1"});
 
-const s3 = new AWSn.S3();
+const s3 = new AWS.S3();
 var dynamodb = new AWS.DynamoDB();
 
 
@@ -266,21 +266,15 @@ docClient.put(params, function(err, data) {
 
 ///Amazon S3 Bucket
 exports.uploadImage = function(){
-multer({
-  storage: multerS3({
-    s3: s3,
-    bucket: 'pengyou',
-    acl: 'public-read',
-    metadata: function (req, file, cb) {
-      cb(null, {fieldName: file.fieldname});
-    },
-    key: function (req, file, cb) {
-      cb(null, 'thisisatempkey')
-    }
-  })
-})
-}
-
+const params = {
+ Bucket: 'pengyou',
+ Key: 'key',
+ Body: 'test'
+};
+s3.upload(params, function(err, data) {
+ console.log(err, data);
+});
+};
 
 
 
