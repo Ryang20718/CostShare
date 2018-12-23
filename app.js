@@ -279,6 +279,21 @@ function onScan(err, data) {
 }
 });
 
+//example s3 Test
+
+
+
+app.post('/image-upload', function(req, res) {
+  costDB.uploadImage(req, res, function(err, some) {
+    if (err) {
+      return res.status(422).send({errors: [{title: 'Image Upload Error', detail: err.message}] });
+    }
+
+    return res.json({'imageUrl': req.file.location});
+  });
+})
+
+
 
 // example endpoint
 app.get("/url", cors(),(req, res, next) => {
