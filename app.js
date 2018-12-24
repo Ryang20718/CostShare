@@ -283,8 +283,6 @@ function onScan(err, data) {
 
 
 //s3 config
-const fileRoutes = require('./routes/file-upload.js');
-app.use("/imageUpload", fileRoutes);
 
 /*
 var AWS = require("aws-sdk");
