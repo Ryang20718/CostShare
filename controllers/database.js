@@ -4,6 +4,7 @@ var tableName = "CostShare";
 
 const multer = require('multer');
 const multerS3 = require('multer-s3');
+const fs = require('fs');
 
 dynamo.AWS.config.update({accessKeyId: process.env.aws_access_key_id, secretAccessKey: process.env.aws_secret_access_key, region: "us-west-1"});
 AWS.config.update({accessKeyId: process.env.aws_access_key_id, secretAccessKey: process.env.aws_secret_access_key, region: "us-west-1"});
@@ -266,6 +267,20 @@ docClient.put(params, function(err, data) {
 
 ///Amazon S3 Bucket Need to get it to work
 
-
+exports.uploadFile = function (req, res) {
+    var item = req.body;
+    var upload = multer({
+        storage: multerS3({
+            s3: s3,
+            bucket: 'pengyou',
+            metadata: function (req, file, cb) {
+                cb(null, { fieldName: file.fieldname });
+            },
+            key: function (req, file, cb) {
+                cb(null, Date.now().toString())
+            }
+        })
+    })
+}
 
 
