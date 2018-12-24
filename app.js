@@ -283,12 +283,9 @@ function onScan(err, data) {
 
 
 //s3 config
+const fileRoutes = require('./routes/file-upload.js');
+app.use("/imageUpload", fileRoutes);
 
-
-
-app.post('/upload', uploaded.array('photos', 3), function(req, res, next) {
-  res.send('Successfully uploaded ' + req.files.length + ' files!')
-})
 /*
 var AWS = require("aws-sdk");
 var s3 = new AWS.S3({accessKeyId: process.env.aws_access_key_id, secretAccessKey: process.env.aws_secret_access_key, region: "us-west-1"});
