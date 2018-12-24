@@ -279,7 +279,6 @@ function onScan(err, data) {
 }
 });
 
-// amazon s3
 
 
 // example endpoint
