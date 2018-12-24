@@ -264,17 +264,8 @@ docClient.put(params, function(err, data) {
 
 
 
-///Amazon S3 Bucket
-exports.uploadImage = function(){
-const params = {
- Bucket: 'pengyou',
- Key: 'key',
- Body: 'test'
-};
-s3.upload(params, function(err, data) {
- console.log(err, data);
-});
-};
+///Amazon S3 Bucket Need to get it to work
+
 
 
 
