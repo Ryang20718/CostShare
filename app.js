@@ -87,9 +87,16 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(flash());
+app.use(flash());/*
 app.use((req, res, next) => {
   if (req.path === '/api/upload') {
+    next();
+  } else {
+    lusca.csrf()(req, res, next);
+  }
+});*/
+app.use((req, res, next) => {
+  if (req.path === '/imageUpload/image-upload') {
     next();
   } else {
     lusca.csrf()(req, res, next);
@@ -283,6 +290,8 @@ function onScan(err, data) {
 
 
 //s3 config
+const fileRoutes = require('./routes/file-upload.js');
+app.use("/imageUpload", fileRoutes);
 
 /*
 var AWS = require("aws-sdk");
