@@ -278,8 +278,13 @@ function onScan(err, data) {
     }
 }
 });
-
-
+var AWS = require("aws-sdk");
+//s3 config
+var s3 = new AWS.S3({accessKeyId: process.env.aws_access_key_id, secretAccessKey: process.env.aws_secret_access_key, region: "us-west-1"});
+var params = {Bucket: 'pengyou', Key: 'testkey', Body: 'stream'};
+s3.upload(params, function(err, data) {
+  console.log(err, data);
+});
 
 // example endpoint
 app.get("/url", cors(),(req, res, next) => {
