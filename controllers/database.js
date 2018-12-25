@@ -240,16 +240,18 @@ function onScan(err, data) {
 
 ///////FOR PENGYOU APP
 
-exports.insertMale = function(email_key, age, citizen, house, car, yearIncome, picArray){//insert or update function
-
+exports.insertMale = function(email_key, age, citizen, house, car, yearIncome){//insert or update function
+var blankArray = []
 var docClient = new AWS.DynamoDB.DocumentClient();//way to insert
 var params = {
   TableName: tableName,
   Item:{
     "email": email_key,//email
-    "role": "buyer",
-    "cost": totalCost,//integer
-    "items":arrayItems//array
+    "age": age,
+    "citizen": citizen,//integer
+    "house":arrayItems,//array
+    "car": car,
+    "yearIncome": yearIncome
   }
 };
 
@@ -263,6 +265,9 @@ docClient.put(params, function(err, data) {
 });
 };
 
+exports.insertMalePicture = function(picture){
+    
+}
 
 
 ///Amazon S3 Bucket Need to get it to work
