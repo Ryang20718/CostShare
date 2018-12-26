@@ -244,8 +244,8 @@ var costDB = require('./controllers/database.js');
 //costDB.scan();
 //costDB.read("testmail");
 //costDB.delete("testmail");
-
-
+//costDB.insertMale("test@mail", 20, true, true, true, "100000",[]);
+//costDB.updatePictures("test@mail",["test","test"]);
 /**
  * CRUD routes
  */
@@ -253,6 +253,15 @@ const crudController = require('./controllers/crud');
 var crud = require('./controllers/crud.js');
 app.get('/createPost',function(req,res){
   res.sendFile(path.join(__dirname+'/views/create.html'));
+});
+
+
+app.post('/addMale', function(req, res){
+    costDB.insertMale(req.body.email_key, req.body.age, req.body.citizen, req.body.house, req.body.car, req.body.yearIncome,[]);
+});
+
+app.post('/updatePictures', function(req, res){
+    costDB.updatePictures(req.body.email_key,req.body.picArray);
 });
 
 
@@ -289,7 +298,7 @@ function onScan(err, data) {
 
 
 
-//s3 config
+//s3 config image upload
 const fileRoutes = require('./routes/file-upload.js');
 app.use("/imageUpload", fileRoutes);
 

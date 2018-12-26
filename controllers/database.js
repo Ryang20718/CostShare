@@ -240,8 +240,8 @@ function onScan(err, data) {
 
 ///////FOR PENGYOU APP
 
-exports.insertMale = function(email_key, age, citizen, house, car, yearIncome){//insert or update function
-var blankArray = []
+exports.insertMale = function(email_key, age, citizen, house, car, yearIncome, picArray){//insert or update function
+
 var docClient = new AWS.DynamoDB.DocumentClient();//way to insert
 var params = {
   TableName: tableName,
@@ -249,9 +249,10 @@ var params = {
     "email": email_key,//email
     "age": age,
     "citizen": citizen,//integer
-    "house":arrayItems,//array
+    "house":house,//array
     "car": car,
-    "yearIncome": yearIncome
+    "yearIncome": yearIncome,
+    "pictures": picArray
   }
 };
 
@@ -265,27 +266,33 @@ docClient.put(params, function(err, data) {
 });
 };
 
-exports.insertMalePicture = function(picture){
-    
-}
 
 
 ///Amazon S3 Bucket Need to get it to work
 
-exports.uploadFile = function (req, res) {
-    var item = req.body;
-    var upload = multer({
-        storage: multerS3({
-            s3: s3,
-            bucket: 'pengyou',
-            metadata: function (req, file, cb) {
-                cb(null, { fieldName: file.fieldname });
-            },
-            key: function (req, file, cb) {
-                cb(null, Date.now().toString())
-            }
-        })
-    })
-}
+exports.updatePictures = function (email_key, arrayOfPics) {
+var params = {
+  TableName: tableName,
+    TableName: tableName,
+    Key:{
+        "email": email_key,
+    }
+};
+var docClient = new AWS.DynamoDB.DocumentClient();//way to insert
+docClient.get(params, function(err, data) {
+    if (err) {
+        console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
+    } else {
+        console.log("GetItem succeeded:", JSON.stringify(data, null, 2));
+        var pictureArray= data.Item.pictures;
+        console.log(pictureArray);
+        for (var i = 0; i < arrayOfPics.length; i++) {
+            pictureArray.push(arrayOfPics[i]);// add pictures
+        }
+        console.log(pictureArray);//final array list of all picture url
+        exports.insertMale("test@mail", 20, true, true, true, "100000",pictureArray);
+    }
+});
+};
 
 
