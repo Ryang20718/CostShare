@@ -286,9 +286,7 @@ docClient.get(params, function(err, data) {
         console.log("GetItem succeeded:", JSON.stringify(data, null, 2));
         var pictureArray= data.Item.pictures;
         console.log(pictureArray);
-        for (var i = 0; i < arrayOfPics.length; i++) {
-            pictureArray.push(arrayOfPics[i]);// add pictures
-        }
+        pictureArray.push(arrayOfPics);// add pictures
         console.log(pictureArray);//final array list of all picture url
         exports.insertMale("test@mail", 20, true, true, true, "100000",pictureArray);
     }
