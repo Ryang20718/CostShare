@@ -288,7 +288,7 @@ docClient.get(params, function(err, data) {
         console.log(pictureArray);
         pictureArray.push(arrayOfPics);// add pictures
         console.log(pictureArray);//final array list of all picture url
-        exports.insertMale("test@mail", 20, true, true, true, "100000",pictureArray);
+        exports.insertMale(email_key, data.Item.age, data.Item.citizen, data.Item.house, data.Item.house, data.Item.yearIncome,pictureArray);
     }
 });
 };
