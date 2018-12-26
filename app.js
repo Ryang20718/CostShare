@@ -96,7 +96,7 @@ app.use((req, res, next) => {
   }
 });*/
 app.use((req, res, next) => {
-  if (req.path === '/imageUpload/image-upload') {
+  if (req.path === '/imageUpload/image-upload' || req.path === '/updatePictures' || req.path === '/addMale' ) {
     next();
   } else {
     lusca.csrf()(req, res, next);
